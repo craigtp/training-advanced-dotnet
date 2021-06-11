@@ -29,7 +29,7 @@ namespace Scheduling.Infrastructure.EventStore
             var preparedCommand = command.SerializeCommand(metadata);
 
             return _client.AppendToStreamAsync(_tenantPrefix + streamId, StreamState.Any,
-                new List<EventData> {preparedCommand});
+                new List<EventData> { preparedCommand });
         }
 
         public Task AppendEvents(string streamName, long version, CommandMetadata metadata, params object[] events)
@@ -110,8 +110,9 @@ namespace Scheduling.Infrastructure.EventStore
         {
             // Serialize the snapshot (extension method)
             // Get snapshot stream name
-            // Append snapshot to stream
-            return Task.CompletedTask;
+            // Append snapshot to streams
+            var snapshotEvent = snapshot.SerializeSnapshot(new SnapshotMetadata { Version = aggregateVersion });
+            return _client.AppendToStreamAsync($"{_tenantPrefix}snapshot-{streamName}", StreamState.Any, new List<EventData> { snapshotEvent });
         }
 
         private string GetSnapshotStreamName(string streamName)

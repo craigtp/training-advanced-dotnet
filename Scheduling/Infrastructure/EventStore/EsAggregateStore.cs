@@ -46,7 +46,7 @@ namespace Scheduling.Infrastructure.EventStore
                 throw new ArgumentNullException(nameof(aggregateId));
 
             var streamName = GetStreamName<T>(aggregateId);
-            var aggregate = (T) Activator.CreateInstance(typeof(T), true);
+            var aggregate = (T)Activator.CreateInstance(typeof(T), true);
 
             aggregate.Id = aggregateId;
 
@@ -68,10 +68,19 @@ namespace Scheduling.Infrastructure.EventStore
 
         private async Task<int?> LoadSnapshot(string streamName, AggregateRootSnapshot snapshotAggregate)
         {
+
             // Load snapshot from the _store
             // If there is one then load it into the aggregate
             // Return next expected version
             // If no snapshot return null
+            var snapshotEnvelope = await _store.LoadSnapshot(streamName);
+
+            if (snapshotEnvelope != null)
+            {
+                snapshotAggregate.LoadSnapshot(snapshotEnvelope.Snapshot, snapshotEnvelope.Metadata.Version);
+                return snapshotEnvelope.Metadata.Version + 1;
+            }
+
             return null;
         }
 
