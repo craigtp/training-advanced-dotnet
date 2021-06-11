@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
 using Scheduling.Application;
+using Scheduling.Domain.Application;
 using Scheduling.Domain.DoctorDay.Events;
 using Scheduling.Infrastructure.EventStore;
 using Scheduling.Infrastructure.InMemory;
@@ -40,16 +41,18 @@ namespace Scheduling
                 esStore,
                 Guid.NewGuid);
 
+            var overbookingProcessManager = new OverbookingProcessManager(
+                new MongoDbBookedSlotRepository(mongoDatabase),
+                2, commandStore, Guid.NewGuid);
+
             var subManager = new SubscriptionManager(
                 client,
                 new EsCheckpointStore(client, "DaySubscription"),
                 "DaySubscription",
                 StreamName.AllStream,
-                new Projector(
-                    new AvailableSlotsProjection(availableSlotsRepository)
-                ),
-                new Projector(
-                    dayArchiverProcessManager)
+                new Projector(new AvailableSlotsProjection(availableSlotsRepository)),
+                new Projector(dayArchiverProcessManager),
+                new Projector(overbookingProcessManager)
             );
 
             await subManager.Start();
