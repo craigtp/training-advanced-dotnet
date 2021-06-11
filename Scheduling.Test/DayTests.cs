@@ -122,6 +122,7 @@ namespace Scheduling.Test
         {
             var slotId = new SlotId(Guid.NewGuid());
             var reason = "Cancel Reason";
+            var requestedBy = "unknown request";
             var expected = new SlotBookingCancelled(_dayId.Value, slotId.Value, reason);
 
             Given(
@@ -129,7 +130,7 @@ namespace Scheduling.Test
                 new SlotScheduled(slotId.Value, _dayId.Value, _date, TimeSpan.FromMinutes(10)),
                 new SlotBooked(_dayId.Value, slotId.Value, "John Doe"));
 
-            await When(new CancelSlotBooking(_dayId.Value, slotId.Value, reason));
+            await When(new CancelSlotBooking(_dayId.Value, slotId.Value, reason, requestedBy));
 
             Then(e =>
             {
@@ -147,7 +148,7 @@ namespace Scheduling.Test
                 new DayScheduled(_dayId.Value, _doctorId.Value, _date),
                 new SlotScheduled(slotId.Value, _dayId.Value, _date, TimeSpan.FromMinutes(10)));
 
-            await When(new CancelSlotBooking(_dayId.Value, slotId.Value, "Some Reason"));
+            await When(new CancelSlotBooking(_dayId.Value, slotId.Value, "Some Reason", "unknown request"));
 
             Then<SlotNotBookedException>();
         }

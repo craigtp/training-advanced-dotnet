@@ -56,12 +56,14 @@ namespace Scheduling.Domain.DoctorDay.Events
                 d => new SlotBookingCancelled(
                     d["dayId"].ToString(),
                     Guid.Parse(d["slotId"].ToString()),
-                    d["reason"].ToString()
+                    d["reason"].ToString(),
+                    d["requestedBy"]?.ToString() ?? "unknown request"
                 ), o => new JObject
                 {
                     ["dayId"] = o.DayId,
                     ["slotId"] = o.SlotId,
-                    ["reason"] = o.Reason
+                    ["reason"] = o.Reason,
+                    ["requestedBy"] = o.RequestedBy
                 });
 
             Map<SlotScheduleCancelled>($"{prefix}-slot-schedule-cancelled",

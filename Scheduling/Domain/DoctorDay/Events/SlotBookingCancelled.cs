@@ -11,16 +11,19 @@ namespace Scheduling.Domain.DoctorDay.Events
 
         public string Reason { get; }
 
-        public SlotBookingCancelled(string dayId, Guid slotId, string reason)
+        public string RequestedBy { get; }
+
+        public SlotBookingCancelled(string dayId, Guid slotId, string reason, string requestedBy = "unknown request")
         {
             DayId = dayId;
             SlotId = slotId;
             Reason = reason;
+            RequestedBy = requestedBy;
         }
 
         protected bool Equals(SlotBookingCancelled other)
         {
-            return base.Equals(other) && DayId == other.DayId && SlotId.Equals(other.SlotId) && Reason == other.Reason;
+            return base.Equals(other) && DayId == other.DayId && SlotId.Equals(other.SlotId) && Reason == other.Reason && RequestedBy == other.RequestedBy;
         }
 
         public override bool Equals(object obj)
@@ -28,12 +31,12 @@ namespace Scheduling.Domain.DoctorDay.Events
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != GetType()) return false;
-            return Equals((SlotBookingCancelled) obj);
+            return Equals((SlotBookingCancelled)obj);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(base.GetHashCode(), DayId, SlotId, Reason);
+            return HashCode.Combine(base.GetHashCode(), DayId, SlotId, Reason, RequestedBy);
         }
     }
 }

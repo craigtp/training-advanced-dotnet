@@ -9,9 +9,11 @@ namespace Scheduling.Controllers
 
         public string Reason { get; set; }
 
+        public string RequestedBy { get; set; }
+
         public CancelSlotBooking ToCommand(string dayId)
         {
-            return new CancelSlotBooking(dayId, SlotId, Reason);
+            return new CancelSlotBooking(dayId, SlotId, Reason, RequestedBy);
         }
     }
 }

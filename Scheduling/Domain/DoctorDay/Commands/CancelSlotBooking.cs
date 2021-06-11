@@ -11,11 +11,14 @@ namespace Scheduling.Domain.DoctorDay.Commands
 
         public string Reason { get; }
 
-        public CancelSlotBooking(string dayId, Guid slotId, string reason)
+        public string RequestedBy { get; }
+
+        public CancelSlotBooking(string dayId, Guid slotId, string reason, string requestedBy)
         {
             DayId = dayId;
             SlotId = slotId;
             Reason = reason;
+            RequestedBy = requestedBy;
         }
     }
 }
