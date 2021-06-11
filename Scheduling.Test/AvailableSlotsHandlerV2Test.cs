@@ -25,7 +25,7 @@ namespace Scheduling.Test
         public AvailableSlotsHandlerV2Test()
         {
             // Repeats every event 2x, e.g.: 1 1 2 2 3 3            
-            EnableAtLeastOnceMonkey = false;
+            EnableAtLeastOnceMonkey = true;
             // Repeats all elements except last e.g.: 1 2 3 1 2            
             EnableAtLeastOnceGorilla = false;
         }
